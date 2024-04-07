@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import posixpath
-import environ
+#import environ
 
-env = environ.Env()
+#env = environ.Env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -80,20 +80,19 @@ WSGI_APPLICATION = 'Hello_World.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 DATABASES = {
-    'default': env.db(),
-	#{
+    'default':
+   # env.db(),
+	{
         #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 		
-		#'ENGINE': 'django.db.backends.postgresql',
-		#'NAME': 'django',
-		#'USER': 'django',
-		#'PASSWORD': 'django_QWErty',
-		#'HOST': 'db',
-		#'PORT': '5432',
-		
-		
-    #}
+		'ENGINE': 'django.db.backends.postgresql',
+		'NAME': 'django',
+		'USER': 'django',
+		'PASSWORD': 'django_QWErty',
+		'HOST': 'db',
+		'PORT': '5432',
+    }
 }
 
 # Password validation
