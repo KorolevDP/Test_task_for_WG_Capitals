@@ -1,41 +1,61 @@
-version: '3.9'
+version: '3'
 
 services:
 
-  django:
-    build: ./Hello_World
-    command: sh -c "gunicorn --bind 0.0.0.0:8000 app.wsgi"
+
+  postgres:
+    container_name: wg_postgres_db
+    image: postgres:13.0-alpine
+    env_file:
+      - .env.postgres
+    networks:
+      - wg_cap
     volumes:
-      - ./Hello_World:/project
-      - static_data:/project/static
-    expose:
-      - 8000
-        # environment:
-        # - DATABASE_URL=postgres sql://django:django_QWErty@db:5432/django
-        # - DEBUG=1
-  db:
-    container_name: postgres_cont
-    image: postgresql:13-alpine
+      - postgres_data:/var/lib/postgresql/data
+    ports:  
+      - "5432:5432"
+
+
+  web_app:
+    container_name: wg_hello_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: web_app:latest
+    command: > 
+      sh -c "python manage.py makemigrations
+      && python manage.py migrate
+      && python manage.py createsuperuser --no-input
+      && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
     volumes:
-      - pg_data:/var/lib/postgresql/data/
-    expose:
-      - 5432
-    environment:
-      - POSTGRES_USER=django
-      - POSTGRES_PASSWORD=django_QWErty
-      - POSTGRES_DB=django
-  
-  nginx:
-    image: nginx:1.19.8-alpine
+      - .:/code
+    env_file:
+      - .env.dev
     depends_on:
-      - django
+      - postgres
+    networks:
+      - wg_cap
+
+
+  nginx:
+    container_name: wg_nginx
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
     ports:
       - "80:80"
     volumes:
-      - static_data:/var/www/html/static
-      - ./nginx-conf.d:/etc/nginx/conf.d
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - web_app
+    networks:
+      - wg_cap
+
 
 volumes:
-  pg_data:
-  static_data:
-      
+  postgres_data:
+
+networks:
+  wg_cap:
