@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_DIR = os.path.dirname(__file__)
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-ukqvz#1&3k4yantjel$2kfw98mn3$&bl+0h@!vzio*(pzgh_7*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["212.109.219.250", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -75,9 +77,13 @@ WSGI_APPLICATION = 'hello_world.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+     "default": {
+        "ENGINE"  : "django.db.backends.postgresql",
+        "NAME"    : os.getenv("DB_NAME", "postgres"),
+        "USER"    : os.getenv("DB_USER", "postgres"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "postgres"),
+        "HOST"    : os.getenv("DB_HOST", "db"),
+        "PORT"    : os.getenv("DB_PORT", "5432"),
     }
 }
 
@@ -122,3 +128,19 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [os.path.join(PROJECT_DIR, "static")]
+MEDIA_URL = "/media/"
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_ROOT = os.path.join(PROJECT_DIR, "media")
+
+STATIC_ROOT = os.getenv("USER_REGISTRY_STATIC_ROOT", STATIC_ROOT)
+MEDIA_ROOT = os.getenv("USER_REGISTRY_MEDIA_ROOT", MEDIA_ROOT)
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+}
+

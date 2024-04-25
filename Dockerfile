@@ -27,7 +27,7 @@ RUN pip install --target=$PKGS_DIR gunicorn
 
 # Main image with service
 FROM base
-ARG SRC_PATH=./devops_demo
+ARG SRC_PATH=./hello_world
 
 ENV PYTHONPATH=/usr/local
 COPY --from=builder /install /usr/local
@@ -43,4 +43,4 @@ ENV SERVICE_HOST="0.0.0.0"
 ENV SERVICE_PORT=8000
 
 # Run service
-CMD python manage.py migrate && gunicorn --workers=1 --bind $SERVICE_HOST:$SERVICE_PORT devops_demo.wsgi
+CMD python manage.py migrate && gunicorn --workers=1 --bind $SERVICE_HOST:$SERVICE_PORT hello_world.wsgi

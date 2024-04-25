@@ -1,6 +1,18 @@
-<html>
-    <body>
-	   Hello World!
-	   <p> Today is {{today}} </p>
-    </body>
+<!DOCTYPE html>
+{% load static %}
+<html >
+
+<head>
+        <meta charset="UTF-8">
+        <title> Hello World! </title>
+	<link rel="stylesheet" href="{% static "css/styles.css" %}" />
+</head>
+
+<body>
+	<img src="{% static "img/planet.jpg" %}" />
+       <div class="main_text">  Hello World! </div>
+       <div class="date"> <p> Today is {{today}} </p> </div>
+       <div class="dev"> Выполнил: Королев Д.П. </div>      
+</body>
+
 </html>
